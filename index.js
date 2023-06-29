@@ -10,5 +10,6 @@ conn.sync({ force: false }).then(() => {
   });
 })
 
+
 // conn.sync({ force: false }).then(() => {
 //conn.sync({ alter: true }).then(() => {

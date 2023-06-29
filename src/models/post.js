@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
             validate: {
-              len: [3, 50] // Establece que la longitud máxima es de 255 caracteres
+              len: [3, 250] // Establece que la longitud máxima es de 250 caracteres
             }
           },
         body: {
@@ -38,6 +38,30 @@ module.exports = (sequelize) => {
           allowNull: true,
         },
         image: {
+          type: DataTypes.JSONB,
+          allowNull: true
+        },
+        typePost: {
+          type: DataTypes.ENUM (["Job", "Community"]),
+          allowNull: true
+        },
+        full_name: {
+          type: DataTypes.STRING,
+          allowNull: false
+        },
+        email: {
+          type: DataTypes.STRING,
+          allowNull: false          
+        },
+        interviewerImage: {
+          type: DataTypes.JSONB,
+          allowNull: true
+          },
+        resume: {
+          type: DataTypes.STRING,
+          allowNull: true
+        },
+        interviewerName: {
           type: DataTypes.JSONB,
           allowNull: true
         }

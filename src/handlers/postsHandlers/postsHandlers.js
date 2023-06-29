@@ -1,20 +1,31 @@
-const {createNewPost, getAllPosts, getPostById, updatePost, deletePost} = require('../../controllers/postsControllers/postsControllers')
+const {createNewPost, getAllPosts, getPostById, updatePost, deletePost, createNewJobPost, searchPostByType} = require('../../controllers/postsControllers/postsControllers')
+const  { sendNotification }  = require('../../utils/sendEmail')
 
 const createPostHandler = async (req, res) => {
+
+  let newPost
+
     try {
-      const { title, body, state, id_user_data, image} = req.body;    
-       
+      const { title, body, state, id_user_data, full_name, email,image, typePost, resume, interviewerImage, interviewerName } = req.body;           
 
       if (!title && !body && !id_user_data) throw new Error("Missing required data");
+      
+      if (typePost === "Job") {
+        newPost = await createNewJobPost(title, body, state, id_user_data, image, typePost, resume, interviewerImage, interviewerName);
 
-      const newPost = await createNewPost(
+      } else { const newPost = await createNewPost(
         title, 
         body, 
         state, 
         id_user_data,
-        image);
-              
-      return res.status(200).json({ newPost });      
+        full_name,
+        email,
+        image,
+        typePost);       
+       
+        sendNotification(email, full_name);
+        return res.status(201).json({ newPost });
+      }    
     } catch (error) {
       return res.status(400).json({ error: error.message });
     }
@@ -22,7 +33,8 @@ const createPostHandler = async (req, res) => {
   
   const getAllPostsHandler = async (req, res) => {
     try {
-      const allPosts = await getAllPosts();
+      const { typePost } = req.query;
+      const allPosts = typePost ? await searchPostByType(typePost) : await getAllPosts();
       if (allPosts.length === 0) {
         throw new Error("The posts do not exist.");
       }
@@ -33,7 +45,8 @@ const createPostHandler = async (req, res) => {
       return res.status(400).json({ details: error.message });
     }
   };
-  
+
+
   const getPostByIdHandler = async (req, res) => {
     const {id} = req.params;
     try{
@@ -46,8 +59,9 @@ const createPostHandler = async (req, res) => {
     } catch(error) {
       return res.status(400).json({ details: error.message });
     }
-};
-  
+};  
+
+
   const updatePostHandler = async (req, res) => {
     const {
       id, 
@@ -74,7 +88,7 @@ const createPostHandler = async (req, res) => {
       return res.status(500).json({ error: "An error occurred while updating the post.", details: error.message });
     }
   };
-  
+
   const deletePostHandler = async (req, res) => {
     const { id } = req.params;
   
@@ -100,6 +114,3 @@ module.exports = {
     updatePostHandler,
     deletePostHandler
 };
-
-
-
