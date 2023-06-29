@@ -2,7 +2,7 @@ require('dotenv').config();
 const { Sequelize } = require('sequelize');
 const fs = require('fs');
 const path = require('path');
-const { DB_USER, DB_PASSWORD, DB_HOST, DB_NAME, DB_DEPLOY } = process.env;
+const {  DB_DEPLOY } = process.env;
 
 
 const sequelize = new Sequelize(
@@ -33,7 +33,7 @@ sequelize.models = Object.fromEntries(capsEntries);
 
 //* En sequelize.models están todos los modelos importados como propiedades
 //* Para relacionarlos hacemos un destructuring
-const { Comments, Posts, Roles, User_data, Users, Mercado_pago, Devdata } = sequelize.models;
+const { Comments, Posts, Roles, User_data, Users } = sequelize.models;
 
 //? Aca vendrian las relaciones y la creacion de la tabla intermedia
 Users.hasOne(User_data, { foreignKey: 'id_users' });
@@ -43,21 +43,17 @@ User_data.hasMany(Posts, { foreignKey: 'id_user_data' })
 Posts.belongsTo(User_data,{ foreignKey: 'id_user_data' })
 
 Posts.hasMany(Comments, { foreignKey: 'id_post' })
-Comments.belongsTo(Posts, { foreignKey: 'id_post' })
-
-User_data.hasMany(Comments, {foreignKey: 'id_user_data' })
-Comments.belongsTo(User_data, {foreignKey: 'id_user_data' })
-
-Mercado_pago.hasOne(Mercado_pago, { foreignKey: 'id_pay'})
-User_data.hasOne(Devdata, { foreignKey: 'id_user_data' } )
-
+Comments.belongsTo(Posts, { foreignKey: 'id_post'})
 
 //ver relacion comentarios y user_data
 
+Posts.hasMany(Comments, {foreignKey: 'id_post'})
+Comments.belongsTo(Posts, {foreignKey: 'id_post'})
 
+Comments.hasMany(Posts, {foreignKey: 'id_coments'})
+Posts.belongsTo(Comments, {foreignKey: 'id_coments'})
 
 module.exports = {
-  sequelize,
   ...sequelize.models, 
   conn: sequelize,     // para importar la conexión { conn } = require('./db.js');
 };
