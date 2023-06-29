@@ -1,15 +1,14 @@
-require('dotenv').config();
-const server = require('./src/app.js');
+const server = require('./src/app');
+
 const { conn } = require('./src/db.js');
-const port =process.env.PORT;
+
 // conn.sync({ alter: true }).then(() => {
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: false}).then(() => {
   console.log('Database connected');
-  server.listen(port, () => {
-    console.log(`% listening at${port}`); 
+  server.listen(3001, () => {
+    console.log("% listening at http://localhost:3001"); 
   });
 })
-
 
 // conn.sync({ force: false }).then(() => {
 //conn.sync({ alter: true }).then(() => {
