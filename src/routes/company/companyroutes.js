@@ -14,4 +14,4 @@ BusinessRouter.put("/:id", updateBusiness);
 BusinessRouter.delete("/:id", deleteBusiness);
 
 
-module.exports =BusinessRouter;
+module.exports=BusinessRouter;

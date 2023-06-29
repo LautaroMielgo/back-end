@@ -17,4 +17,4 @@ usersRouter.get("/:id", getUserByIdHandler);
 // usersRouter.delete("/:id", deleteUsers);
 
 
-module.exports=usersRouter;
+module.exports = usersRouter;
